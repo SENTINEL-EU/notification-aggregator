@@ -1,0 +1,17 @@
+version: '2'
+services:
+  sentinel_notification-aggregator:
+    container_name: sentinel_notification-aggregator
+    image: sentinel_notification-aggregator:latest
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      spring.rabbitmq.host: rabbitmq
+    networks:
+      - spring-cloud-network
+
+networks:
+  spring-cloud-network:
+    external:
+      name: security-infusion-adapter_spring-cloud-network

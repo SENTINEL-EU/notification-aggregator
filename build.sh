@@ -1,0 +1,1 @@
+docker build --tag=sentinel_notification-aggregator:latest .
