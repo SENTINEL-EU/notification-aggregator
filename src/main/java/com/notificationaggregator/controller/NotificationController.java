@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-public class EventController {
+public class NotificationController {
 
     @Value("${rabbitmq.queue.name}")
     private String queue;
@@ -31,7 +31,7 @@ public class EventController {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public EventController(ConnectionFactory connectionFactory) {
+    public NotificationController(ConnectionFactory connectionFactory) {
         this.rabbitTemplate = new RabbitTemplate(connectionFactory);
     }
 
