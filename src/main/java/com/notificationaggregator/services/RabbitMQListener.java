@@ -44,7 +44,7 @@ public class RabbitMQListener {
                 try {
                     String filter = findJsonField.findNestedField(root, "severityValue").toString().replace("\"", "");
 
-                    if (filter.equals("AUDIT_FAILURE") || filter.equals("AUDIT_SUCCESS")) {
+                    if (filter.equals("AUDIT_FAILURE") || filter.equals("UNKNOWN") || filter.equals("ERROR")) {
                         events.add(transformNotification);
                     }
                 }
