@@ -14,7 +14,6 @@ import java.util.List;
 @Slf4j
 @RabbitListener(queues = "${rabbitmq.queue.name}", containerFactory = "rabbitListenerContainerFactory")
 public class RabbitMQListener {
-
     public ResponseEntity<List<Notification>> processMessage(String exchange, String routingKey, List<Notification> events, RabbitTemplate rabbitTemplate, String queue, List<Object> messages) {
         log.info("Consuming Messages...");
         int counter = 0;
@@ -47,9 +46,8 @@ public class RabbitMQListener {
                     if (filter.equals("AUDIT_FAILURE") || filter.equals("UNKNOWN") || filter.equals("ERROR")) {
                         events.add(transformNotification);
                     }
-                }
-                catch(Exception e){
-                       log.info("The value of the field severityValue is " + e.getMessage());
+                } catch (Exception e) {
+                    log.info("The value of the field severityValue is " + e.getMessage());
                 }
 
                 message = rabbitTemplate.receiveAndConvert(queue);
@@ -60,13 +58,9 @@ public class RabbitMQListener {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         log.info("Consumed all " + counter + " messages successfully!");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(events);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 }
