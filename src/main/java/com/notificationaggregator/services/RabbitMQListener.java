@@ -21,7 +21,6 @@ public class RabbitMQListener {
 
         try {
             Object message = rabbitTemplate.receiveAndConvert(queue);
-            messages.add(message);
 
             while (message != null) {
 
@@ -46,6 +45,8 @@ public class RabbitMQListener {
 
                     if (filter.equals("AUDIT_FAILURE") || filter.equals("UNKNOWN") || filter.equals("ERROR")) {
                         events.add(transformNotification);
+                        rabbitTemplate.convertAndSend(exchange, routingKey, message.toString());
+
                     }
                 }
                 catch(Exception e){
@@ -53,10 +54,6 @@ public class RabbitMQListener {
                 }
 
                 message = rabbitTemplate.receiveAndConvert(queue);
-                messages.add(message);
-            }
-            for (int i = 0; i < counter; i++) {
-                rabbitTemplate.convertAndSend(exchange, routingKey, messages.get(i).toString());
             }
         } catch (Exception e) {
             log.error(e.getMessage());
