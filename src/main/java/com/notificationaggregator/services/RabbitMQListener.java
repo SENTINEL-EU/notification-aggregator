@@ -14,7 +14,6 @@ import java.util.List;
 @Slf4j
 @RabbitListener(queues = "${rabbitmq.queue.name}", containerFactory = "rabbitListenerContainerFactory")
 public class RabbitMQListener {
-
     public ResponseEntity<List<Notification>> processMessage(String exchange, String routingKey, List<Notification> events, RabbitTemplate rabbitTemplate, String queue, List<Object> messages) {
         log.info("Consuming Messages...");
         int counter = 0;
@@ -50,8 +49,8 @@ public class RabbitMQListener {
                 }
                 catch(Exception e){
                        log.info("The value of the field level is " + e.getMessage());
-                }
 
+                }
                 message = rabbitTemplate.receiveAndConvert(queue);
                 messages.add(message);
             }
@@ -60,13 +59,9 @@ public class RabbitMQListener {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         log.info("Consumed all " + counter + " messages successfully!");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(events);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 }
