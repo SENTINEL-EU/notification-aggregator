@@ -37,19 +37,19 @@ public class RabbitMQListener {
                 transformNotification.setEventType(findJsonField.findNestedField(root, "channel"));
                 transformNotification.setEventSource("Security Infusion");
                 transformNotification.setDescription(findJsonField.findNestedField(root, "message"));
-                transformNotification.setSeverityLevel(findJsonField.findNestedField(root, "level"));
+                transformNotification.setSeverityLevel(root.path("rule").path("level"));
                 transformNotification.setSeverityValue(findJsonField.findNestedField(root, "severityValue"));
                 transformNotification.setOrganisationID(findJsonField.findNestedField(root, "organisationID"));
 
                 try {
-                    String filter = findJsonField.findNestedField(root, "severityValue").toString().replace("\"", "");
-
-                    if (filter.equals("AUDIT_FAILURE") || filter.equals("UNKNOWN") || filter.equals("ERROR")) {
+                    String filter = root.path("rule").path("level").toString().replace("\"", "");
+                    int result = Integer.parseInt(filter);
+                    if (result>=7) {
                         events.add(transformNotification);
                     }
                 }
                 catch(Exception e){
-                       log.info("The value of the field severityValue is " + e.getMessage());
+                       log.info("The value of the field level is " + e.getMessage());
                 }
 
                 message = rabbitTemplate.receiveAndConvert(queue);
